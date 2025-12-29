@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  L01_go_echo
+  labels:
+    name:  L01_go_echo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: echo
+  template:
+    metadata:
+      labels:
+        app: echo 
+    spec:
+      containers:
+      - name: echo-container
+        image: hashicorp/http-echo
+        args:
+          - "-text=Hello from k8s and Go"
+        ports:
+        - containerPorts: 5678
+---
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: echo-service
+spec: 
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 5678
+  selector:
+      app: echo
