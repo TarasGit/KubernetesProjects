@@ -10,10 +10,11 @@ az provider show -n Microsoft.ContainerService --query registrationState
 
 ## Azure AKS cluster manually
 az aks create \
-    --resource-group k8sprojects \
-    --name L01_cluster \
+    --resource-group MyK8sProject \
+    --name MyFirstCluster \
     --node-count 1 \
-    --node-vm-size Standard_B1s \
+    --node-vm-size Standard_DS2_v2 \
+    --location westeurope \
     --generate-ssh-keys
     
 ## Cluster connection
