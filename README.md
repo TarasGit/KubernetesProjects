@@ -10,7 +10,7 @@ az provider show -n Microsoft.ContainerService --query registrationState
 
 ## Azure AKS cluster manually
 az aks create \
-    --resource-group MyK8sProject \
+    --resource-group k8sprojects \
     --name MyFirstCluster \
     --node-count 1 \
     --node-vm-size Standard_D2s_v3 \
@@ -29,3 +29,8 @@ kubctl get service echo-service --watch
 
 ## Cleanup RG to save costs
 az group delete --name k8sprojects --yes --no-wait
+
+## Remove Kubernetes Cluster
+kubectl config get-contexts
+kubectl config delete-context MyFirstCluster
+
