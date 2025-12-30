@@ -10,7 +10,7 @@ az provider show -n Microsoft.ContainerService --query registrationState
 
 ## Azure AKS cluster manually
 az aks create \
-    --resource-group MyK8sProject \
+    --resource-group k8sprojects \
     --name MyFirstCluster \
     --node-count 1 \
     --node-vm-size Standard_DS2_v2 \
