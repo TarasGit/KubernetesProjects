@@ -1,14 +1,14 @@
 # KubernetesProjects
 Kubernetes deployment configurations
 
-# Resource group creation 
+## Resource group creation 
 az group create --name k8sprojects --location westeurope
 
-# For new Azure subscription 
+## For new Azure subscription 
 az provider register --namespace Microsoft.ContainerService
 az provider show -n Microsoft.ContainerService --query registrationState
 
-# Azure AKS cluster manually
+## Azure AKS cluster manually
 az aks create \
     --resource-group k8sprojects \
     --name L01_cluster \
@@ -16,15 +16,15 @@ az aks create \
     --node-vm-size Standard_B1s \
     --generate-ssh-keys
     
-# Cluster connection
+## Cluster connection
 az aks get-credentials --resouce-group k8sprojects --name L01_cluster 
 kubclt get nodes
 
-# Apply deployment
+## Apply deployment
 kubclt apply -f deployment.yml
 
-# Test deployment
+## Test deployment
 kubctl get service echo-service --watch
 
-# Cleanup RG to save costs
+## Cleanup RG to save costs
 az group delete --name k8sprojects --yes --no-wait
