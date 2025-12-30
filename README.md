@@ -4,6 +4,10 @@ Kubernetes deployment configurations
 # Resource group creation 
 az group create --name k8sprojects --location westeurope
 
+# For new Azure subscription 
+az provider register --namespace Microsoft.ContainerService
+az provider show -n Microsoft.ContainerService --query registrationState
+
 # Azure AKS cluster manually
 az aks create \
     --resource-group k8sprojects \
