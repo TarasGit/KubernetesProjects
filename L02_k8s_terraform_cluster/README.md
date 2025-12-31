@@ -6,3 +6,6 @@ Terraform cluster creation
 2. terraform apply -target=azurerm_kubernetes_cluster.aks
 3. terraform apply
 
+## Get app external IP
+kubectl get service
+
