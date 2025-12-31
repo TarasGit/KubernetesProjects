@@ -5,3 +5,15 @@ terraform {
 
   }
 }
+
+provider "azurerm" {
+  features {
+    
+  }
+}
+
+resource "azurerm_resource_group" "myk8s" {
+  name = "myk8sproject"
+  location = "westeurope"
+}
+
