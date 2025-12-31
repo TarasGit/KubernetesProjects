@@ -43,9 +43,19 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
 }
 
-# 5. Das Deployment aus deiner YAML-Datei
-resource "kubernetes_manifest" "echo_app" {
+# 5. Das Deployment
+resource "kubernetes_manifest" "echo_deployment" {
   manifest = yamldecode(file("${path.module}/deployment.yml"))
+  
+  # Falls du den Namespace nicht in der YAML hast, erzwinge ihn hier:
+  # manifest = merge(yamldecode(file("${path.module}/deployment.yml")), { metadata = { namespace = "default" } })
 
+  depends_on = [azurerm_kubernetes_cluster.aks]
+}
+
+# 6. Der Service (Falls du eine separate service.yml hast)
+resource "kubernetes_manifest" "echo_service" {
+  manifest = yamldecode(file("${path.module}/service.yml"))
+  
   depends_on = [azurerm_kubernetes_cluster.aks]
 }
