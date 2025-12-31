@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  L01_go_echo
+  namespace: default
   labels:
     name:  L01_go_echo
 spec:
