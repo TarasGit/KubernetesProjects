@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  L01_go_echo
+  name:  L01-go-echo
   namespace: default
   labels:
-    name:  L01_go_echo
+    name:  L01-go-echo
 spec:
   replicas: 2
   selector:
