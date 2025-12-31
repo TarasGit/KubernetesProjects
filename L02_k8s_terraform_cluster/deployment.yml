@@ -21,15 +21,3 @@ spec:
           - "-text=Hello from k8s and Go"
         ports:
         - containerPorts: 5678
----
-apiVersion: v1 
-kind: Service 
-metadata:
-  name: echo-service
-spec: 
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 5678
-  selector:
-      app: echo
