@@ -42,7 +42,6 @@ provider "kubernetes" {
 }
 
 resource "kubernetes_manifest" "echo_app" {
-  manifest = yamldecode(file("${path.module}/deployment.yml"))
-
+manifest = yamldecode(file("${path.module}/deployment.yaml"))
   depends_on = [ azurerm_kubernetes_cluster.myaks ]
 }
