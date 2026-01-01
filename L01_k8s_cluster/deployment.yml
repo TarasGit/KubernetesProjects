@@ -1,9 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  L01_go_echo
-  labels:
-    name:  L01_go_echo
+  name: go-echo-app
 spec:
   replicas: 2
   selector:
@@ -12,24 +10,24 @@ spec:
   template:
     metadata:
       labels:
-        app: echo 
+        app: echo
     spec:
       containers:
       - name: echo-container
-        image: hashicorp/http-echo
+        image: hashicorp/http-echo # Ein fertiges Go-Tool, das Text ausgibt
         args:
-          - "-text=Hello from k8s and Go"
+          - "-text=Hallo aus Kubernetes und Go!"
         ports:
-        - containerPorts: 5678
+        - containerPort: 5678
 ---
-apiVersion: v1 
-kind: Service 
+apiVersion: v1
+kind: Service
 metadata:
   name: echo-service
-spec: 
-  type: LoadBalancer
+spec:
+  type: LoadBalancer # Das erstellt eine echte öffentliche Azure IP
   ports:
   - port: 80
     targetPort: 5678
   selector:
-      app: echo
+    app: echo
