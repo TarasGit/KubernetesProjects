@@ -1,8 +1,14 @@
 # 1. Provider Definition
 terraform {
   required_providers {
-    azurerm = { source = "hashicorp/azurerm", version = "~> 3.0" }
-    kubernetes = { source = "hashicorp/kubernetes", version = "~> 2.0" }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.0"
+    }
   }
 }
 
@@ -16,7 +22,7 @@ resource "azurerm_resource_group" "k8s" {
   location = "westeurope"
 }
 
-# 3. AKS Cluster (mit deiner funktionierenden VM-Größe)
+# 3. AKS Cluster
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "MyFirstCluster"
   location            = azurerm_resource_group.k8s.location
@@ -26,7 +32,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name       = "default"
     node_count = 1
-    vm_size    = "Standard_D2s_v3" # Die Größe, die vorhin geklappt hat
+    vm_size    = "Standard_D2s_v3"
   }
 
   identity {
@@ -34,8 +40,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-# 4. Kubernetes Provider Konfiguration 
-# (Wichtig: Nutzt die Daten des gerade erstellten Clusters)
+# 4. Kubernetes Provider Konfiguration
+# Zieht die Zertifikate direkt aus dem erstellten Cluster
 provider "kubernetes" {
   host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
   client_certificate     = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate)
@@ -43,19 +49,38 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
 }
 
-# 5. Das Deployment
+# 5. Das Deployment (mit automatischer Namespace-Zuweisung)
 resource "kubernetes_manifest" "echo_deployment" {
-  manifest = yamldecode(file("${path.module}/deployment.yml"))
-  
-  # Falls du den Namespace nicht in der YAML hast, erzwinge ihn hier:
-  # manifest = merge(yamldecode(file("${path.module}/deployment.yml")), { metadata = { namespace = "default" } })
+  manifest = merge(
+    yamldecode(file("${path.module}/deployment.yml")),
+    {
+      metadata = merge(
+        yamldecode(file("${path.module}/deployment.yml")).metadata,
+        { namespace = "default" }
+      )
+    }
+  )
 
   depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
-# 6. Der Service (Falls du eine separate service.yml hast)
+# 6. Der Service (für die Public IP)
 resource "kubernetes_manifest" "echo_service" {
-  manifest = yamldecode(file("${path.module}/service.yml"))
-  
+  manifest = merge(
+    yamldecode(file("${path.module}/service.yml")),
+    {
+      metadata = merge(
+        yamldecode(file("${path.module}/service.yml")).metadata,
+        { namespace = "default" }
+      )
+    }
+  )
+
   depends_on = [azurerm_kubernetes_cluster.aks]
+}
+
+# 7. Output: Zeigt dir die IP-Adresse nach dem Apply an
+output "app_public_ip" {
+  description = "Die öffentliche IP deiner Go-App"
+  value       = kubernetes_manifest.echo_service.object.status.loadBalancer.ingress[0].ip
 }
