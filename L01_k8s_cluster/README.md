@@ -19,6 +19,7 @@ az aks create \
     
 ## Cluster connection
 az aks get-credentials --admin --resource-group k8sprojects --name MyFirstCluster
+
 kubclt get nodes
 
 ## Apply deployment
