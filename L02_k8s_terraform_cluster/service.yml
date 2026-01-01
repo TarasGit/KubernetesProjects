@@ -1,12 +1,11 @@
-apiVersion: v1 
-kind: Service 
+apiVersion: v1
+kind: Service
 metadata:
   name: echo-service
-  namespace: default
-spec: 
-  type: LoadBalancer
+spec:
+  type: LoadBalancer # Das erstellt eine echte öffentliche Azure IP
   ports:
   - port: 80
     targetPort: 5678
   selector:
-      app: echo
+    app: echo
