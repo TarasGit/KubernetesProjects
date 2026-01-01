@@ -78,9 +78,8 @@ resource "kubernetes_manifest" "echo_service" {
 
   depends_on = [azurerm_kubernetes_cluster.aks]
 }
-
-# 7. Output: Zeigt dir die IP-Adresse nach dem Apply an
+# 7. Output: Zeigt die IP an, sobald sie verfügbar ist
 output "app_public_ip" {
-  description = "Die öffentliche IP deiner Go-App"
-  value       = kubernetes_manifest.echo_service.object.status.loadBalancer.ingress[0].ip
+  description = "Die öffentliche IP deiner Go-App (kann nach dem ersten Apply noch leer sein)"
+  value       = try(kubernetes_manifest.echo_service.object.status.loadBalancer.ingress[0].ip, "Wird noch zugewiesen...")
 }
