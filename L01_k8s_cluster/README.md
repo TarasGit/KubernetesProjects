@@ -18,7 +18,7 @@ az aks create \
     --generate-ssh-keys
     
 ## Cluster connection
-az aks get-credentials --resouce-group k8sprojects --name L01_cluster 
+az aks get-credentials --admin --resource-group k8sprojects --name MyFirstCluster
 kubclt get nodes
 
 ## Apply deployment
