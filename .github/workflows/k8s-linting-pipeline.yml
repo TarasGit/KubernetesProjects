@@ -1,0 +1,19 @@
+name: "K8s Linting Action"
+
+on: 
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  check-syntax:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Scan Kubernetes YAMLs
+        uses: stackrox/kube-linter-action@v1
+        with:
+          directory: .
