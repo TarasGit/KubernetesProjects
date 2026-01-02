@@ -1,5 +1,6 @@
 # Project
 Static Web Page from Docker Container in Kubernetes
+![Architecture Diagram](./diagrams/my.png)
 
 ## Resource group creation 
 az group create --name k8sprojects --location westeurope
